@@ -1,0 +1,67 @@
+#!/bin/sh
+
+yt_url=""
+VideoPath="~/Downloads/Videos"
+AudioPath="~/Downloads/Audio"
+dmenucenter="-z 1000 -x 1140 -y 750 -l 9"
+
+alias ytprint="echo -e"
+
+yt_ft () {
+	ytprint "fetching video url&title ..."
+	data="$(youtube-dl -f "$qualityid+bestaudio" --youtube-skip-dash-manifest -g --get-title --no-warnings $yt_url)"
+	title=$(ytprint "$data" | sed -n '1p' | sed -E 's/[^[:space:]a-zA-Z0-9]//g;s/^(\s)*//g')
+	
+	from=$(ytprint "00:00:00" | dmenu $dmenucenter -p "start:" || exit 1)
+	to=$(ytprint "00:01:00" | dmenu $dmenucenter -p "end:" || exit 1)
+
+	data=$(ytprint  "$data" | sed "1d; s/.*/-ss $from -i &/") 
+	
+	title="$title-$from-$to"
+	
+	ytprint "pass data to ffmpeg ..."
+	ffmpeg $data -t $to -c copy "$VideoPath/$title.$qualityext"
+}
+
+yt_dwn () {
+	case $yttype in
+		1)
+			youtube-dl -f "$qualityid+bestaudio" -o "$VideoPath/%(title)s.%(ext)s" $yt_url 
+			;;
+		2)
+			yt_ft
+			;;
+		3)
+			youtube-dl -f "bestaudio" -o "$AudioPath/%(title)s.%(ext)s" $yt_url
+			;;
+	esac
+}
+
+selectquality(){
+	quality=$(youtube-dl -F $yt_url | sed -n '7,50p' | dmenu -l 9 -p "Select quality" || exit 1)
+	qualityid=$(ytprint $quality | awk '{print $1;}')
+	qualityext=$(ytprint $quality | awk '{print $2;}')
+	[[ $qualityid = "" ]] && exit 1
+}
+
+selectfunc(){
+	chosen=$(ytprint  "1-Download Video\n2-Download part of video\n3-Audio Only" | dmenu $dmenucenter  -p "choose func:" || exit 1)
+	yttype=$(ytprint $chosen | cut -c1-1)
+}
+
+yt_url=$(xsel -b -o)
+valid=$(expr match "$yt_url" "https*")
+
+if [ $valid -lt 4 ]
+then
+	ytprint $yt_url
+	notify-send "NOT a URL, Please copy url to ur clipboard"
+	exit 1
+fi
+
+selectquality # Select Quality
+selectfunc # Select Download type
+yt_dwn # download
+
+#test
+# https://www.youtube.com/watch?v=zltgXvg6r3k

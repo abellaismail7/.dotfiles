@@ -1,0 +1,53 @@
+#!/bin/sh
+
+username=$(whoami)
+
+usbmount() {
+	usbdrives="$(lsblk  -rpno "name,type,Label,size,MOUNTPOINT" | sed "s/\s\s/ # /g" |  grep 'part\|rom' | awk '$5==""{print $1,$4,$3}')"
+	chosen="$(echo "$usbdrives" | dmenu -z 800 -l 9 -i -p "Mount which drive?")" || exit 1
+	mp="/media/"
+	label="$(echo $chosen | awk '{print $3}')"
+	chosen="$(echo $chosen | awk '{print $1}')"
+
+	if [ "$label" = "#" ];then
+		label="USB-1"
+		while [ -d "$mp$label"];do
+			label=$(echo $label | awk -F "USB-" '{$NF+='a';print}' OFS="USB-")
+		done
+	fi
+	echo $label
+		
+	mp="$mp$label"
+	
+	accept="$(echo "" | dmenu -p "Mount to $mp [y/n]")" || exit 1
+	[ "$accept" = "n" ] && exit 1
+	sudo -A mkdir -p "$mp"
+
+	partitiontype="$(lsblk -no "fstype" "$chosen")"
+	case "$partitiontype" in
+		"vfat") sudo -A mount -t vfat "$chosen" "$mp" -o rw,umask=0000;;
+		"exfat") sudo -A mount "$chosen" "$mp" -o uid="$(id -u)",gid="$(id -g)";;
+		"ntfs") sudo -A mount "$chosen" "$mp" -o uid="$(id -u)",gid="$(id -g)";;
+		*) sudo -A mount "$chosen" "$mp"; user="$(whoami)"; ug="$(groups | awk '{print $1}')"; sudo -A chown "$user":"$ug" "$mp";;
+	esac
+	
+	notify-send "USB MOUNTED" "$chosen|$label"
+}
+
+
+usbumount(){
+	drives=$(lsblk -nrpo "name,type,size,label,mountpoint" | sed "s/\s\s/ # /g" | awk '$5!~/\/boot$|\/home$|SWAP/&&length($5)>1{printf "%s (%s) %s\n",$5,$3,$4}')
+	echo $drives
+	[ -z "$drives" ] && exit
+	chosen="$(echo "$drives" | dmenu -l 9 -i -p "Unmount which drive?")" || exit 1
+	chosen="$(echo "$chosen" | awk '{print $1}')"
+	[ -z "$chosen" ] && exit
+	sudo -A umount -l "$chosen" && notify-send "💻 USB unmounting" "$chosen unmounted."
+
+}
+
+case $1 in
+	"m") usbmount;;
+	"u") usbumount;;
+	*) echo please pass [m]ount [u]mount as arg 
+esac

@@ -1,0 +1,3 @@
+#!/bin/sh
+mv $1 ~/Trash
+echo "$1 moved to ~/trash"

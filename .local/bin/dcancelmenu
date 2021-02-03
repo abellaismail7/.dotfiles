@@ -1,0 +1,10 @@
+#!/bin/bash
+
+choice=$(grep -v '^$' "/tmp/loading" | dmenu -p "end a process" ) || exit 1
+
+
+eval "$(echo $choice | awk '{print $1}' ) kill $(echo $choice | awk '{print $2}')"
+
+
+
+

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Prints the current volume or  if muted.
+if [ "$1"  = "ui" ];then
+	xsetroot -name "dddd"
+	exit
+fi
+menupath="/tmp/loading"
+res="$(awk '{printf "%s ",$4}' $menupath 2> /dev/null)"
+res="$(echo -e "$res" | sed 's/ *$//g')"
+
+if [ -z "$res" ]
+then
+	echo "n/a"
+	exit 1
+fi
+
+echo "$res"
+

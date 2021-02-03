@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$1" = "ui" ]
+then	
+	xkblayout-state set +1
+	kill -37 $(pidof slblocks)
+	exit 0
+fi
+
+layout="$(xkblayout-state print '%s')"
+echo "$layout"

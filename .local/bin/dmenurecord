@@ -1,0 +1,53 @@
+#!/bin/sh
+
+addproccess () {
+	echo "$1" >> /tmp/loading
+	kill -38 $(pidof slblocks)
+}
+
+killrecording() {
+	# kill with SIGTERM, allowing finishing touches.
+	kill -15 "$2"
+
+	# remove matched PID line | remove empty line > /tmp/loading
+	echo -e "$(awk "\$2 != $2 {print \$0 }" /tmp/loading | grep -v '^$' )" > /tmp/loading 
+	# update status
+	kill -38 $(pidof slblocks)
+
+
+	# even after SIGTERM, ffmpeg may still run, so SIGKILL it.
+	sleep 3
+	kill -9 "$2"
+	exit
+}
+
+screencast() { 
+	ids="$(pidof ffmpeg)"
+	if [ ! -z "$ids" ]
+	then
+		notify-send "ffmpeg already running"
+		exit 1
+	fi
+	ffmpeg -y \
+	-f x11grab \
+	-framerate 60 \
+	-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
+	-i "$DISPLAY" \
+	-f pulse -i default \
+	-r 30 \
+ 	-c:v libx264 -crf 0 -preset ultrafast -c:a aac \
+	"$HOME/Downloads/records/screencast-$(date '+%y%m%d-%H%M-%S').mp4" \
+	> /dev/null 2>&1 < /dev/null &	
+	ffpid=$(echo $!)
+	addproccess "$0 $ffpid recorder 壘"
+}
+
+
+case "$1" in
+	"kill") killrecording $@ ;;
+	*) screencast ;;
+esac
+
+
+
+

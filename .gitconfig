@@ -1,0 +1,9 @@
+[user]
+	email = 60820321+abellaismail7@users.noreply.github.com
+	name = Ismail A Bella
+[core]
+	editor = nvim
+[credential]
+	helper = cache
+[init]
+	defaultBranch = main
