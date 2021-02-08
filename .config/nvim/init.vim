@@ -13,6 +13,9 @@ Plug 'itchyny/lightline.vim'
 Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
+
+set viminfo+=n~/.cache/nvim/info
+
 "Javascript
 
 
