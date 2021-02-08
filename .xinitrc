@@ -7,6 +7,7 @@ redshift-gtk -O 5000 -g .8 &
 
 xrdb ~/.Xresources &
 
+mpd &
 
 #### Trackpad
 modprobe -r usbmouse &
@@ -18,7 +19,7 @@ setxkbmap -layout us,ar
 setxkbmap -option 'grp:alt_shift_toggle' &
 
 dunst &
-xcompmgr &
+//xcompmgr &
 // Android Studio
 export _JAVA_AWT_WM_NONREPARENTING=1
 
