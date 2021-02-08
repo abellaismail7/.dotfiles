@@ -1,0 +1,44 @@
+#!/bin/zsh
+
+add(){
+	playlists=$(ls -1 Downloads/playlists | sed -n 's/\..*//p' )
+	playlists="New\nCancel\n$playlists"
+	
+	selected=()
+	while true ; do
+		choice=$(echo $playlists | dmenu -l 9 -p "Add to playlist" ) || exit 1
+		if [ "$choice" = "New" ];then
+			echo "new"
+		elif [ "$choice" = "Cancel" ];then
+			break
+		else
+			selected+=("$choice")
+			playlists=$(echo $playlists | awk "!/^$choice$/{print \$1}" )
+		fi
+			
+		[ -n $choice ] || break
+	done
+
+	youtube-dl -f "bestaudio" -o "$HOME/Downloads/music/%(title)s.%(ext)s" $yt_url
+	name=$(youtube-dl --get-filename -f "bestaudio" -o "%(title)s.%(ext)s" $yt_url)
+	for plt in "${selected[@]}";do
+		p="$HOME/Downloads/playlists/$plt.m3u"
+		grep -e "^$name$" $p | break
+		echo $name >> "$HOME/Downloads/playlists/$plt.m3u"
+	done
+	
+	slcpls=$(IFS=, eval 'echo "${selected[*]}"')
+	echo "$yt_url $slcpls" >> "$HOME/.config/music.db"
+}
+
+yt_url=$(xsel -b -o)
+valid=$(expr match "$yt_url" "https*")
+
+if [ $valid -lt 4 ]
+then
+	ytprint $yt_url
+	notify-send "NOT a URL, Please copy url to ur clipboard"
+	exit 1
+fi
+
+add 

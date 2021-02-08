@@ -8,6 +8,10 @@ export ZSH="$XDG_CONFIG_HOME/.oh-my-zsh"
 export _JAVA_AWT_WM_NONREPARENTING=1
 LC_CTYPE=en_US.UTF-8
 export TZ="UTC+0"
+
+# source lf icons
+source $XDG_CONFIG_HOME/lf/icons
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
