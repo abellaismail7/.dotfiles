@@ -2,7 +2,7 @@
 
 yt_url=""
 VideoPath="~/Downloads/Videos"
-AudioPath="~/Downloads/Audio"
+AudioPath="~/Downloads/music"
 dmenucenter="-z 1000 -x 1140 -y 750 -l 9"
 
 alias ytprint="echo -e"
@@ -32,7 +32,7 @@ yt_dwn () {
 			yt_ft
 			;;
 		3)
-			youtube-dl -f "bestaudio" -o "$AudioPath/%(title)s.%(ext)s" $yt_url
+			youtube-dl -x --audio-format mp3 -f "bestaudio" -o "$AudioPath/%(title)s.mp3" $yt_url
 			;;
 	esac
 }
