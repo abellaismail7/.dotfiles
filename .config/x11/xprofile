@@ -1,0 +1,28 @@
+#brightness
+xrandr --output eDP1 --brightness .7 --scale 1.0x1.0 &
+redshift-gtk -O 5000 -g .8 &
+
+xrdb $XDG_CONFIG_HOME/x11/xresources &
+
+mpd &
+
+#### Trackpad
+modprobe -r usbmouse &
+modprobe bcm5974 &
+
+# set en,ar keymap
+setxkbmap -layout us,ar 
+# alt+shift switch keymap
+setxkbmap -option 'grp:alt_shift_toggle' &
+
+dunst &
+
+# set Last Background
+nitrogen --restore &
+
+# Android Studio
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Ask for password => Graphical
+export SUDO_ASKPASS=~/.local/bin/dpass
+

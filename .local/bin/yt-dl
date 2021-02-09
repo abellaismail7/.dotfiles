@@ -3,7 +3,7 @@
 yt_url=""
 VideoPath="~/Downloads/Videos"
 AudioPath="~/Downloads/music"
-dmenucenter="-z 1000 -x 1140 -y 750 -l 9"
+dmenucenter="-z 1000 -c -l 9"
 
 alias ytprint="echo -e"
 
@@ -58,7 +58,8 @@ then
 	notify-send "NOT a URL, Please copy url to ur clipboard"
 	exit 1
 fi
-
+echo $dmenucenter
+echo $SCREEN_WH
 selectquality # Select Quality
 selectfunc # Select Download type
 yt_dwn # download

@@ -1,26 +1,5 @@
-# set Last Background
-nitrogen --restore &
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile" ]; then
+	. "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile"
+fi
 
-#brightness
-xrandr --output eDP1 --brightness .7 --scale 1.0x1.0 &
-redshift-gtk -O 5000 -g .8 &
-
-xrdb ~/.Xresources &
-
-mpd &
-
-#### Trackpad
-modprobe -r usbmouse &
-modprobe bcm5974 &
-
-# set en,ar keymap
-setxkbmap -layout us,ar 
-# alt+shift switch keymap
-setxkbmap -option 'grp:alt_shift_toggle' &
-
-dunst &
-//xcompmgr &
-// Android Studio
-export _JAVA_AWT_WM_NONREPARENTING=1
-
-dwm
+exec dwm

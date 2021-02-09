@@ -2,15 +2,10 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export PATH=~/.local/bin:$PATH
-export SUDO_ASKPASS=~/.local/bin/dpass
+# ~/.profile
 export ZSH="$XDG_CONFIG_HOME/.oh-my-zsh"
-export _JAVA_AWT_WM_NONREPARENTING=1
 LC_CTYPE=en_US.UTF-8
 export TZ="UTC+0"
-
-# source lf icons
-source $XDG_CONFIG_HOME/lf/icons
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,

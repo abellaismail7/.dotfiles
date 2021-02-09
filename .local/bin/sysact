@@ -16,6 +16,6 @@ cmds="\
  reboot	${reb:-sudo -A reboot}
  shutdown	${shut:-sudo -A shutdown -h now}"
 
-choice="$(echo "$cmds" | cut -d'	' -f 1 | dmenu -l 6 -z 600 -x 1140 -y 750)" || exit 1
+choice="$(echo "$cmds" | cut -d'	' -f 1 | dmenu -l 6 -z 600 -c)" || exit 1
 
 `echo "$cmds" | grep "^$choice	" | cut -d '	' -f2-`
