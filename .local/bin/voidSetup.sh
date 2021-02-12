@@ -33,7 +33,8 @@ fi;
 config checkout
 config config status.showUntrackedFiles no
 
-
+# install oh my zsh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # enable SDD triming
 lsblk -Drpno "NAME,DISC-GRAN,DISC-MAX,MOUNTPOINT" | awk '$2 != "0B" && $3 != "0B" && $4 == "/"{print $1}' | grep "/dev" && trimSSD
@@ -58,7 +59,7 @@ ln -s /etc/sv/dbus /var/service
 
 
 # intel bullshit
-install void-repo-nonfree intel-ucode linux-firmware-intel mesa-dri vulkan-loader mesa-vulkan-intel intel-video-accel
+install mesa-dri
 
 ## xorg
 install xorg-minimal xorg-fonts xterm xinit
@@ -74,7 +75,8 @@ while [ $isdone -eq 0];do
 	
 	case $manufacter in
 		1) 
-			install xf86-video-intel ;;
+			install xf86-video-intel
+			install void-repo-nonfree intel-ucode linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel ;;
 		2) 
 			install xf86-video-vmware ;;
 		3) 
@@ -95,37 +97,21 @@ curl -o "$font_jbmn.zip" "https://github.com/ryanoasis/nerd-fonts/releases/downl
 7z x "$font_jbmn.zip" -o.$font_jbmn
 cp -rf $font_jbmn/*.ttf .local/share/fonts
 
+# libft
+install libXrender xorg-util-macros fontconfig pkgconf
+git clone https://gitlab.freedesktop.org/xorg/lib/libxft.git $project/libxft
+cd $projects/libxft
+curl -Ls https://gitlab.freedesktop.org/xorg/lib/libxft/merge_requests/1.patch | patch -p1
+sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
+make
+sudo make install
 
+# Suckless
+install libXinerama-devel freetype-devel fontconfig-devel libX11-devel pkg-config
+git clone https://github.com/abellaismail7/dwm.git $projects/dwm && cd $projects/dwm && sudo make install 
+git clone https://github.com/abellaismail7/dmenu.git $projects/dmenu  && cd $projects/dmenu && sudo make install 
+git clone https://github.com/abellaismail7/st.git $projects/st && cd $projects/st && sudo make install 
+git clone https://github.com/abellaismail7/slblocks.git $projects/sblocks && cd $projects/slblocks && sudo make install 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+cd $HOME
 
