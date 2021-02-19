@@ -1,0 +1,3 @@
+#!/bin/bash
+res=$(translate -t ar -a $(xsel))
+notify-send "Translate" "$res" -u low -i $XDG_DATA_HOME/icons/language.svg

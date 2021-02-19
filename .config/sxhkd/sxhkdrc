@@ -1,0 +1,34 @@
+super + t
+	trans
+super + d
+	dmenu_run -l 9 -z 600 -c
+super + s
+	import ~/Downloads/shots/screenshot~$(date '+%F~%T').png
+super + shift + q
+	sysact
+super + shift + Return
+	$TERMINAL
+
+alt + l
+	keytoggle ui
+super + m
+	dmmount m
+super + u
+	dmmount u
+
+super + shift + {m,l}
+	$TERMINAL -e {ncmpcpp,lf}
+
+
+XF86Audio{Raise,Lower}Volume
+	pamixer --allow-boost {-i,-d} 5; kill -36 $(pidof slblocks)
+XF86MonBrightness{Up,Down}
+	xbacklight {-inc,-dec} 15
+XF86PowerOff
+	sysact
+XF86AudioMute
+	pamixer -t; kill -36 $(pidof slblocks)
+XF86Audio{Prev,Next,Play}
+	mpc {prev,next,toggle}
+
+

@@ -1,10 +1,10 @@
-#!/bin/sh
-alias install="sudo xbps-install -S"
+#!/bin/bash
+alias xin="sudo xbps-install -S"
 projects="$HOME/projects"
 
 
-install u
-install git zsh make gcc curl
+sudo xbps-install -Su
+xin git zsh make gcc curl p7zip
 
 mkdir $projects
 
@@ -12,11 +12,12 @@ git clone --bare "https://github.com/abellaismail7/.dotfiles" "$projects/.dotfil
 
 
 function config {
-   /usr/bin/git --git-dir=$projects --work-tree=$HOME $@
+   /usr/bin/git --git-dir=$projects/.dotfiles --work-tree=$HOME $@
 }
 
 function trimSSD {
 	sudo sh -c 'echo -e "#!/bin/sh \n\n fstrim /" > /etc/cron.daily/fstrim'
+	chmod u+x /etc/cron.weekly/fstrim
 }
 
 mkdir -p "$HOME/.config-backup"
@@ -38,19 +39,18 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 
 # enable SDD triming
 lsblk -Drpno "NAME,DISC-GRAN,DISC-MAX,MOUNTPOINT" | awk '$2 != "0B" && $3 != "0B" && $4 == "/"{print $1}' | grep "/dev" && trimSSD
-chmod u+x /etc/cron.weekly/fstrim
 
 # if laptop => save battery
 type=$(cat /sys/class/dmi/id/chassis_type)
 if [ "$type" = "9" ];then
-	install tlp
+	xin tlp
 	ln -s /etc/sv/tlp /var/service
 	sv up tlp
 fi
 
 
 # install network manager
-install NetworkManager
+xin NetworkManager
 rm /var/service/dhcpcd
 rm /var/service/wpa_supplicant
 rm /var/service/wicd
@@ -59,10 +59,10 @@ ln -s /etc/sv/dbus /var/service
 
 
 # intel bullshit
-install mesa-dri
+xin mesa-dri
 
 ## xorg
-install xorg-minimal xorg-fonts xterm xinit
+xin xorg-minimal xorg-fonts xterm xinit
 
 # xf86-video installation
 isdone=0
@@ -75,14 +75,14 @@ while [ $isdone -eq 0];do
 	
 	case $manufacter in
 		1) 
-			install xf86-video-intel
-			install void-repo-nonfree intel-ucode linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel ;;
+			xin xf86-video-intel
+			xin void-repo-nonfree intel-ucode linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel ;;
 		2) 
-			install xf86-video-vmware ;;
+			xin xf86-video-vmware ;;
 		3) 
-			install xf86-video-ati ;;
+			xin xf86-video-ati ;;
 		4) 
-			install xf86-video-nouveau ;;
+			xin xf86-video-nouveau ;;
 		*)
 			echo "Please enter number between 1-4"
 			isdone=0 ;;
@@ -98,7 +98,7 @@ curl -o "$font_jbmn.zip" "https://github.com/ryanoasis/nerd-fonts/releases/downl
 cp -rf $font_jbmn/*.ttf .local/share/fonts
 
 # libft
-install libXrender xorg-util-macros fontconfig pkgconf
+xin xorgproto libXrender-devel freetype-devel fontconfig-devel pkg-config
 git clone https://gitlab.freedesktop.org/xorg/lib/libxft.git $project/libxft
 cd $projects/libxft
 curl -Ls https://gitlab.freedesktop.org/xorg/lib/libxft/merge_requests/1.patch | patch -p1
@@ -107,11 +107,14 @@ make
 sudo make install
 
 # Suckless
-install libXinerama-devel freetype-devel fontconfig-devel libX11-devel pkg-config
-git clone https://github.com/abellaismail7/dwm.git $projects/dwm && cd $projects/dwm && sudo make install 
-git clone https://github.com/abellaismail7/dmenu.git $projects/dmenu  && cd $projects/dmenu && sudo make install 
-git clone https://github.com/abellaismail7/st.git $projects/st && cd $projects/st && sudo make install 
-git clone https://github.com/abellaismail7/slblocks.git $projects/sblocks && cd $projects/slblocks && sudo make install 
+function installSuckless (){
+	$([[ -d "$projects/$1" ]] || git clone "https://github.com/abellaismail7/$1.git" "$projects/$1" ) && cd "$projects/$1" && sudo make install 
+}
+xin libXinerama-devel freetype-devel fontconfig-devel libX11-devel pkg-config
+installSuckless dwm
+installSuckless dmenu
+installSuckless st
+installSuckless slblocks
 
 cd $HOME
 

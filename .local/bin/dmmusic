@@ -1,34 +1,32 @@
 #!/bin/zsh
 
 add(){
-	playlists=$(ls -1 Downloads/playlists | sed -n 's/\..*//p' )
-	playlists="New\nCancel\n$playlists"
+	playlists=$(ls -1 $HOME/Downloads/playlists | sed -n 's/\..*//p' )
+	playlists="$playlists"
 	
 	selected=()
 	while true ; do
 		choice=$(echo $playlists | dmenu -l 9 -p "Add to playlist" ) || exit 1
-		if [ "$choice" = "New" ];then
-			echo "new"
-		elif [ "$choice" = "Cancel" ];then
-			break
-		else
-			selected+=("$choice")
-			playlists=$(echo $playlists | awk "!/^$choice$/{print \$1}" )
-		fi
-			
-		[ -n $choice ] || break
+		[ "$choice" = "--" ] && break
+		selected+=("$choice")
+		playlists=$(echo $playlists | awk "!/^$choice$/{print \$1}" )
 	done
 
 	youtube-dl -f "bestaudio" -o "$HOME/Downloads/music/%(title)s.%(ext)s" $yt_url
-	name=$(youtube-dl --get-filename -f "bestaudio" -o "%(title)s.%(ext)s" $yt_url)
+	vddata=$(youtube-dl --get-filename -f "bestaudio" -o "%(id)s\n%(title)s.%(ext)s" $yt_url)
+	name=$(echo $vddata | awk 'NR==2')
+
 	for plt in "${selected[@]}";do
 		p="$HOME/Downloads/playlists/$plt.m3u"
-		grep -e "^$name$" $p | break
-		echo $name >> "$HOME/Downloads/playlists/$plt.m3u"
+		grep -e "^$name$" $p && break
+		echo $name >> "$p"
 	done
-	
+	id=$(echo $vddata | awk 'NR==1')
+
+	grep -e "^$id" "$HOME/.config/music.db" && notify-send "this music already exist" | exit 1
+
 	slcpls=$(IFS=, eval 'echo "${selected[*]}"')
-	echo "$yt_url $slcpls" >> "$HOME/.config/music.db"
+	echo "$id $slcpls" >> "$HOME/.config/music.db"
 }
 
 yt_url=$(xsel -b -o)
@@ -36,7 +34,7 @@ valid=$(expr match "$yt_url" "https*")
 
 if [ $valid -lt 4 ]
 then
-	ytprint $yt_url
+	echo $yt_url
 	notify-send "NOT a URL, Please copy url to ur clipboard"
 	exit 1
 fi

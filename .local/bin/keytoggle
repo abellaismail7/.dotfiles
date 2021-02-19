@@ -1,5 +1,4 @@
 #!/bin/sh
-
 if [ "$1" = "ui" ]
 then	
 	xkblayout-state set +1

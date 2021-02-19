@@ -31,18 +31,23 @@ usbmount() {
 		*) sudo -A mount "$chosen" "$mp"; user="$(whoami)"; ug="$(groups | awk '{print $1}')"; sudo -A chown "$user":"$ug" "$mp";;
 	esac
 	
-	notify-send "USB MOUNTED" "$chosen|$label"
+	notify-send "USB MOUNTED" "$chosen@$label" --icon=$XDG_DATA_HOME/icons/usb.svg
+
 }
 
 
 usbumount(){
 	drives=$(lsblk -nrpo "name,type,size,label,mountpoint" | sed "s/\s\s/ # /g" | awk '$5!~/\/boot$|\/home$|SWAP/&&length($5)>1{printf "%s (%s) %s\n",$5,$3,$4}')
 	echo $drives
-	[ -z "$drives" ] && exit
+	if [[ -z "$drives" ]];then
+		notify-send "No mounted USBs" --icon=$XDG_DATA_HOME/icons/usb.svg
+		exit 1
+	fi
 	chosen="$(echo "$drives" | dmenu -l 9 -i -p "Unmount which drive?")" || exit 1
 	chosen="$(echo "$chosen" | awk '{print $1}')"
-	[ -z "$chosen" ] && exit
-	sudo -A umount -l "$chosen" && notify-send "💻 USB unmounting" "$chosen unmounted."
+	[ -z "$chosen" ] && exit 1
+	sudo -A umount -l "$chosen" && notify-send "USB unmounting" "$chosen unmounted."--icon=$XDG_DATA_HOME/icons/usb.svg
+	
 
 }
 

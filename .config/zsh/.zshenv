@@ -3,9 +3,6 @@ export VISUAL="nvim"
 export TERMINAL="st"
 export BROWSER="firefox"
 
-export PATH=$HOME/.local/bin:$PATH
-
-
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -15,10 +12,3 @@ export HISTFILE="$XDG_DATA_HOME/zsh/zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
 
-# source lf icons
-source $XDG_CONFIG_HOME/lf/icons
-
-# ls/lf colors 
-export LS_COLORS="$(cat $XDG_CONFIG_HOME/jellybeans.colordir)"
-
-export SUDO_ASKPASS=~/.local/bin/dpass

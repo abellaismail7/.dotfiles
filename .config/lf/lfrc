@@ -6,15 +6,49 @@ set color256 true
 set drawbox true
 set icons true
 set ignorecase true
+set sortby time
+set reverse on
 
 # Custom Functions
 cmd open ${{
     case $(file --mime-type "$f" -bL) in
         text/*|application/json) $EDITOR "$f";;
-        *) xdg-open "$f" ;;
+        *) echo "open it with enter" ;;
     esac
 }}
 
+cmd paste &{{
+    set -- $(lf -remote load)
+    mode="$1"
+    shift
+    case "$mode" in
+		copy)
+		    rsync -rltDv --ignore-existing --progress -- "$@" . |
+            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+            while IFS= read -r line; do
+                lf -remote "send $id echo $line"
+            done
+            ;;
+        move) mv -n -- "$@" .;;
+    esac
+    lf -remote "send load"
+    lf -remote "send clear"
+}}
+
+
+
+# Archive bindings
+cmd unarchive ${{
+
+  	case "$f" in
+    	*.zip) unzip "$f" -d $(basename $f .zip);;
+    	*.rar) unrar "$f" ;;
+      	*.tar.gz) tar -xzvf "$f" ;;
+      	*.tar.bz2) tar -xjvf "$f" ;;
+      	*.tar) tar -xvf "$f" ;;
+      	*) echo "Unsupported format" ;;
+  	esac
+}}
 
 # Trash cli
 cmd trash ${{
@@ -44,7 +78,12 @@ cmd restore_trash ${{
 
 # Remove default key bindings
 map d
+map p
+map o
 
+# File Openers
+map oo $ xdg-open "$f" 
+map ov $$EDITOR "$f"
 
 # Broot
 cmd broot_jump ${{
@@ -62,9 +101,21 @@ cmd broot_jump ${{
 # Basics
 map . set hidden!
 map t toggle 
+map x cut
+map y copy
+map p paste
 
 # Broot Mappings
 map f broot_jump
+
+# Archive Mappings
+map az zip
+map ar rar
+map at tar
+map ag targz
+map ab targz
+map au unarchive
+
 
 # Trash Mappings
 map dd trash
@@ -74,4 +125,10 @@ map tr restore_trash
 # Fast Navs
 map gm cd /media
 map gd cd ~/Downloads
+map gp cd ~/projects
+map gc cd ~/.config
+map gl cd ~/.local
+
+
+
 
