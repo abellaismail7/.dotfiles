@@ -1,0 +1,26 @@
+#!/bin/python3
+
+import os
+import sys
+from gi.repository import Gio
+
+all_apps = Gio.AppInfo.get_all()
+
+apps = {}
+for app in all_apps:
+    apps[app.get_display_name()] = app.get_executable()
+
+
+fn = os.environ.get('XDG_CACHE_HOME') + "/desktop-apps"   
+try:
+    cache_file = open(fn, "w")
+except IOError:
+    print("Error: File does not appear to exist.",file=sys.stderr)
+    exit(1)
+
+data = ""
+for name in apps.keys():
+    data += name + " " + apps[name] + "\n"
+
+cache_file.write(data)
+cache_file.close()

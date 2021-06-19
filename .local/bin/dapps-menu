@@ -1,0 +1,10 @@
+#!/bin/sh
+
+apps=$(cat $XDG_CACHE_HOME/desktop-apps)
+
+name=$(echo "$apps" | dmenu -l 9 -c )
+
+
+execPath=$(echo "$name" | grep -oE "[^ ]*$" | ${SHELL:-"/bin/sh"} &)
+
+echo $execPath
