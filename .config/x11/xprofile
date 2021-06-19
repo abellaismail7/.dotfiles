@@ -2,26 +2,30 @@
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 #brightness
-xrandr --output eDP1 --brightness .7 --scale 1.0x1.0 
-redshift-gtk -O 5000 -g .8 &
+xrandr --output eDP1 --brightness 1 --scale 1.0x1.0 
+redshift -O 5000 &
 
 xrdb $XDG_CONFIG_HOME/x11/xresources 
 
 mpd &
 
 #### Trackpad
-modprobe -r usbmouse &
-modprobe bcm5974 &
+#modprobe bcm5974 &
 
 # set en,ar keymap
 setxkbmap -layout us,ar 
 
+# Keymaps
 sxhkd &
 
+# transparency
+xcompmgr &
+
+# Notification Server
 dunst &
 
 # set Last Background
-nitrogen --restore &
+xwallpaper --zoom ~/.local/share/wallpaper &
 
 # Ask for password => Graphical
 export SUDO_ASKPASS=~/.local/bin/dpass
