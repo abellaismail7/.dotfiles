@@ -7,13 +7,13 @@ if [ "$1"  = "ui" ];then
 fi
 menupath="/tmp/loading"
 res="$(awk '{printf "%s ",$4}' $menupath 2> /dev/null)"
-res="$(echo -e "$res" | sed 's/ *$//g')"
+res="$(echo "$res" | sed 's/ *$//g')"
 
 if [ -z "$res" ]
 then
-	echo "n/a"
+	echo -n ""
 	exit 1
 fi
 
-echo "$res"
+echo -n "$res"
 

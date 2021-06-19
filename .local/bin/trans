@@ -1,3 +1,17 @@
-#!/bin/bash
-res=$(translate -t ar -a $(xsel))
+#!/bin/sh
+
+options="selection\nclipboard"
+
+choice=$(echo -e "$options" | dmenu -c -z 600 -l 9 -p "translate from: " || exit 1 )
+
+if [ "$choice" = "selection" ] ; then
+	choice=$(xsel)
+elif [ "$choice" = "clipboard" ] ; then
+	choice=$(xsel -ob)
+fi
+
+lang=$(echo -e "ar\nen\nja\nfr" | dmenu -c -z 600 -l 9 -p "target: " )
+
+res=$(translate -t "$lang" -a "$choice")
+
 notify-send "Translate" "$res" -u low -i $XDG_DATA_HOME/icons/language.svg

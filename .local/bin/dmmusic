@@ -18,7 +18,7 @@ add(){
 
 	for plt in "${selected[@]}";do
 		p="$HOME/Downloads/playlists/$plt.m3u"
-		grep -e "^$name$" $p && break
+		[ -f "$p" ] && grep -e "^$name$" $p && break
 		echo $name >> "$p"
 	done
 	id=$(echo $vddata | awk 'NR==1')

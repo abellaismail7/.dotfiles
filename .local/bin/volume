@@ -5,7 +5,7 @@ if [ "$1"  = "ui" ];then
 	dunstify "VOLUME SHOW UI PLEASE INSTEAD OF NOTIFACATION"
 	exit
 fi
-[ $(pamixer --get-mute) = true ] && echo  00% && exit
+[ $(pamixer --get-mute) = true ] && echo -n " 00%" && exit
 
 vol="$(pamixer --get-volume)"
 
@@ -17,4 +17,4 @@ else
 	icon="墳"
 fi
 
-echo "$icon $vol%"
+echo -n "$icon $vol%"
