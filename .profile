@@ -15,10 +15,13 @@ export HISTFILE="$XDG_DATA_HOME/zsh/zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
 
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+
 # source lf icons
 source $XDG_CONFIG_HOME/lf/icons
 
-# ls/lf colors 
-export LS_COLORS="$(cat $XDG_CONFIG_HOME/jellybeans.colordir)"
+source /usr/share/nvm/init-nvm.sh
+source "$XDG_DATA_HOME/st.dircolors"
 
 export SUDO_ASKPASS=~/.local/bin/dpass
+export MANPAGER="nvim -c 'set ft=man' -"
