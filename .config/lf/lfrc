@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set previewer ~/.config/lf/preview
 set cleaner preview-image
 # Basic Settings
@@ -15,6 +17,18 @@ cmd open ${{
         text/*|application/json) $EDITOR "$f";;
         *) echo "open it with enter" ;;
     esac
+}}
+
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir $ans
+}}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  $EDITOR $ans
 }}
 
 cmd paste &{{
@@ -36,6 +50,21 @@ cmd paste &{{
 }}
 
 
+cmd cp2phone ${{
+	adb push "$f" /sdcard/fromlf
+}}
+
+cmd image2clipboard ${{
+	xclip -selection clipboard -t image/png -i "$f"
+}}
+
+cmd setwallpaper %cp "$f" ~/.local/share/wallpaper && xwallpaper --zoom "$f"
+
+# install font bindings
+cmd installfont ${{
+	cp $f/* ~/.local/share/fonts
+	fc-cache -vf
+}}
 
 # Archive bindings
 cmd unarchive ${{
@@ -49,6 +78,11 @@ cmd unarchive ${{
       	*) echo "Unsupported format" ;;
   	esac
 }}
+
+cmd zip %zip -r "$f" "$f"
+cmd tar %tar cvf "$f.tar" "$f"
+cmd targz %tar cvzf "$f.tar.gz" "$f"
+cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
 
 # Trash cli
 cmd trash ${{
@@ -80,9 +114,11 @@ cmd restore_trash ${{
 map d
 map p
 map o
-
+map i
+map m 
+map c
 # File Openers
-map oo $ xdg-open "$f" 
+map oo $ xdg-open "$f" & 
 map ov $$EDITOR "$f"
 
 # Broot
@@ -104,7 +140,7 @@ map t toggle
 map x cut
 map y copy
 map p paste
-
+map bg setwallpaper
 # Broot Mappings
 map f broot_jump
 
@@ -113,7 +149,7 @@ map az zip
 map ar rar
 map at tar
 map ag targz
-map ab targz
+map ab tarbz2
 map au unarchive
 
 
@@ -128,7 +164,17 @@ map gd cd ~/Downloads
 map gp cd ~/projects
 map gc cd ~/.config
 map gl cd ~/.local
+map gt cd /tmp
+# Make
+map mf mkfile
+map md mkdir
 
+# copy to X 
+map ci image2clipboard
+map cp cp2phone
 
+# other
+map ii $$PAGER "$f"
+map if installfont
 
 

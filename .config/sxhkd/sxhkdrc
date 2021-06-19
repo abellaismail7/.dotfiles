@@ -1,33 +1,52 @@
+super + r ; {k,w}
+	{kill -USR1 $(pidof sxhkd) && notify-send "sxhkd reloaded succefully",
+	xwallpaper --zoom ~/.local/share/wallpaper}
+
+super + w
+	notify-send $PWD
+
 super + t
 	trans
+
 super + d
-	dmenu_run -l 9 -z 600 -c
-super + s
-	import ~/Downloads/shots/screenshot~$(date '+%F~%T').png
+	dapps-menu -l 9 -z 600 -c
+
+super + s ; {s,o,f}
+	import { ~/Downloads/shots/screenshot~$(date '+%F~%T').png, png:- | xclip -selection clipboard -target image/png -i, -window root ~/Downloads/shots/fullshot~$(date '+%F~%T').png && xsetroot -name "Successful Screenshot " }
+
 super + shift + q
 	sysact
+
 super + shift + Return
 	$TERMINAL
 
 alt + l
 	keytoggle ui
+
+super + p
+	colorpicker --one-shot --preview --short | xsel --clipboard
+
 super + m
 	dmmount m
+
 super + u
 	dmmount u
 
 super + shift + {m,l}
 	$TERMINAL -e {ncmpcpp,lf}
 
-
 XF86Audio{Raise,Lower}Volume
 	pamixer --allow-boost {-i,-d} 5; kill -36 $(pidof slblocks)
+
 XF86MonBrightness{Up,Down}
 	xbacklight {-inc,-dec} 15
+
 XF86PowerOff
 	sysact
+
 XF86AudioMute
 	pamixer -t; kill -36 $(pidof slblocks)
+
 XF86Audio{Prev,Next,Play}
 	mpc {prev,next,toggle}
 

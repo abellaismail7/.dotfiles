@@ -12,7 +12,8 @@ case ${1##*.} in
 
     # PDF
     pdf) # Convert pdf file to texts
-        pdftotext -l 10 -nopgbrk -q -- "$1" - && exit ;;
+		pdftoppm -jpeg -singlefile "$1" /tmp/lfthumb
+		preview-image draw "/tmp/lfthumb.jpg" "$2" "$3" "$4" "$5" && exit 1 ;;
 
     # BitTorrent
     torrent)
@@ -29,6 +30,9 @@ case ${1##*.} in
         lynx -dump -- "$1" ||
         elinks -dump "$1" && exit ;;
 
+    svg)
+        convert -resize 200x200 "$1" /tmp/lfthumb.png
+		preview-image draw "/tmp/lfthumb.png" "$2" "$3" "$4" "$5" && exit 1 ;;
     *) ;; # Go on to handle by mime type
 esac
 
@@ -50,8 +54,8 @@ case "$(file -Lb --mime-type -- "$1")" in
     image/*)
         preview-image draw "$1" "$2" "$3" "$4" "$5" && exit 1 ;;
 	video/*)
-		ffmpegthumbnailer -s 300 -i "$1" -o /tmp/videothumb.jpg
-		preview-image draw "/tmp/videothumb.jpg" "$2" "$3" "$4" "$5" && exit 1 ;;
+		ffmpegthumbnailer -s 300 -i "$1" -o /tmp/lfthumb.jpg
+		preview-image draw "/tmp/lfthumb.jpg" "$2" "$3" "$4" "$5" && exit 1 ;;
     # Video and audio
     audio/*|application/octet-stream)
         mediainfo "$1" && exit ;;
