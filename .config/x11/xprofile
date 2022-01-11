@@ -3,7 +3,8 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 #brightness
 xrandr --output eDP1 --brightness 1 --scale 1.0x1.0 
-redshift -O 5000 &
+redshift -O 5000
+redshift -O 5000
 
 xrdb $XDG_CONFIG_HOME/x11/xresources 
 

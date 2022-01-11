@@ -24,4 +24,4 @@ source /usr/share/nvm/init-nvm.sh
 source "$XDG_DATA_HOME/st.dircolors"
 
 export SUDO_ASKPASS=~/.local/bin/dpass
-export MANPAGER="nvim -c 'set ft=man' -"
+export MANPAGER="nvim +Man!"

@@ -20,7 +20,10 @@ except IOError:
 
 data = ""
 for name in apps.keys():
-    data += name + " " + apps[name] + "\n"
+    try:
+        data += name + " " + apps[name] + "\n"
+    except Exception:
+        print("Ignored: " + name)
 
 cache_file.write(data)
 cache_file.close()

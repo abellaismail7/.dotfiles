@@ -1,8 +1,8 @@
 #!/bin/sh
-
+nvm use node
 options="selection\nclipboard"
 
-choice=$(echo -e "$options" | dmenu -c -z 600 -l 9 -p "translate from: " || exit 1 )
+choice=$(echo -e "$options" | dmenu -c -z 600 -l 9 -p "translate from: ") || exit 1
 
 if [ "$choice" = "selection" ] ; then
 	choice=$(xsel)
@@ -10,7 +10,8 @@ elif [ "$choice" = "clipboard" ] ; then
 	choice=$(xsel -ob)
 fi
 
-lang=$(echo -e "ar\nen\nja\nfr" | dmenu -c -z 600 -l 9 -p "target: " )
+
+lang=$(echo -e "ar\nen\nja\nfr" | dmenu -c -z 600 -l 9 -p "target: " ) || exit 1
 
 res=$(translate -t "$lang" -a "$choice")
 

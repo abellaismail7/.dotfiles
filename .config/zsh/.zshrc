@@ -7,6 +7,7 @@ export ARCHFLAGS="-arch x86_64"
 export LANG=en_US.UTF-8
 LC_CTYPE=en_US.UTF-8
 setopt interactive_comments
+setopt HIST_IGNORE_SPACE
 
 # for fast v-mode | side effect no key comb
 export KEYTIMEOUT=1
@@ -17,13 +18,13 @@ git_prompt(){
 	echo -n "%{[0;31m%}$(git symbolic-ref --short HEAD 2> /dev/null || echo Error )"
 	echo -n "%{[0;35m%}"
 
-	git diff -quiet &> /dev/null || echo "%{[1;33m%} ✗"
+	git diff --quiet &> /dev/null || echo "%{[1;33m%} ✗"
 
 
 }
 # enable functions inside PROMPT
 setopt PROMPT_SUBST
-PROMPT="%(?:%{[01;32m%}➜ :%{[01;31m%}➜ )%{[0;36m%}%c\$(git_prompt) %{[00m%}"
+PROMPT="%{[1;94m%}%c\$(git_prompt) %(?:%{[00;32m%}λ:%{[00;31m%}λ) %{[00m%}"
 # improve tab completion
 autoload -Uz compinit
 compinit
@@ -31,21 +32,7 @@ _comp_options+=(globdots)		# Include hidden files.
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' # no case sensitive
 
-# Change cursor shape for different vi modes.
-function zle-keymap-select () {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[1 q';;      # block
-        viins|main) echo -ne '\e[5 q';; # beam
-    esac
-}
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 
 # Use lf to switch directories and bind it to ctrl-o
@@ -101,6 +88,8 @@ alias -- 9='cd -9'
 alias -- _='sudo '
 alias grep='grep --color=auto'
 
+alias tmux='tmux -f .config/tmux/tmux.conf'
+
 # Git
 alias config='/usr/bin/git --git-dir=$HOME/projects/.dotfiles/ --work-tree=$HOME'
 
@@ -122,15 +111,22 @@ fi
 ## Void Linux
 if [ -f /etc/void-release ]
 	then
-# xbps
+	# xbps
+	
+	alias xup='sudo xbps-install -Syuv'
+	alias xin='sudo xbps-install -S'
+	alias xq='sudo xbps-query'
+	alias xf='sudo xbps-query -Rs'
+	alias xm='sudo xbps-query -m'
+	alias xhome='sudo xbps-query -p homepage'
 
-alias xup='sudo xbps-install -Syuv'
-alias xin='sudo xbps-install -S'
-alias xq='sudo xbps-query'
-alias xf='sudo xbps-query -Rs'
-alias xm='sudo xbps-query -m'
-alias xhome='sudo xbps-query -p homepage'
+fi
 
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+  alias nvm='unalias nvm node npm && . "$NVM_DIR"/nvm.sh && nvm'
+  alias node='unalias nvm node npm && . "$NVM_DIR"/nvm.sh && node'
+  alias npm='unalias nvm node npm && . "$NVM_DIR"/nvm.sh && npm'
 fi
 
 ##Others
@@ -160,6 +156,6 @@ _md(){
 	mkdir -p -- "$1" && cd -P -- "$1"
 }
 
-# source
-source /usr/share/nvm/init-nvm.sh
-source $HOME/projects/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/projects/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source $ZDOTDIR/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh

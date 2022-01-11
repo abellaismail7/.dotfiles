@@ -1,10 +1,16 @@
 #!/bin/sh
 
+langNum="$(xkblayout-state print '%c')"
+if [ $langNum -ne 0 ]
+then
+	xkblayout-state set 0
+fi
 apps=$(cat $XDG_CACHE_HOME/desktop-apps)
 
-name=$(echo "$apps" | dmenu -l 9 -c )
+name=$(echo "$apps" | dmenu -l 9 -b )
 
 
 execPath=$(echo "$name" | grep -oE "[^ ]*$" | ${SHELL:-"/bin/sh"} &)
 
+xkblayout-state set $langNum
 echo $execPath

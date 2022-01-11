@@ -1,65 +1,81 @@
 #!/bin/sh
 
 yt_url=""
-VideoPath="~/Downloads/Videos"
-AudioPath="~/Downloads/music"
+VideoPath="$HOME/Downloads/Videos"
+AudioPath="$HOME/Downloads/music"
 dmenucenter="-z 1000 -c -l 9"
 
 alias ytprint="echo -e"
 
+# DOWNLOAD A PORTION OF VIDEO
 yt_ft () {
 	ytprint "fetching video url&title ..."
 	data="$(youtube-dl -f "$qualityid+bestaudio" --youtube-skip-dash-manifest -g --get-title --no-warnings $yt_url)"
 	title=$(ytprint "$data" | sed -n '1p' | sed -E 's/[^[:space:]a-zA-Z0-9]//g;s/^(\s)*//g')
-	
+
 	from=$(ytprint "00:00:00" | dmenu $dmenucenter -p "start:" || exit 1)
 	to=$(ytprint "00:01:00" | dmenu $dmenucenter -p "end:" || exit 1)
 
 	data=$(ytprint  "$data" | sed "1d; s/.*/-ss $from -i &/") 
-	
+
 	title="$title-$from-$to"
-	
-	ytprint "pass data to ffmpeg ..."
+
+	ytprint "pass data to ffmpeg ... $data"
 	ffmpeg $data -t $to -c copy "$VideoPath/$title.$qualityext"
 }
 
+# PICK HOW TO DOWNLOAD
 yt_dwn () {
 	case $yttype in
-		1)
-			youtube-dl -f "$qualityid+bestaudio" -o "$VideoPath/%(title)s.%(ext)s" $yt_url 
+		1) # Download selected quality with the best audio
+			youtube-dl -f "$qualityid+bestaudio" -o "$VideoPath/%(title)s.%(ext)s" $yt_url
 			;;
-		2)
+		2) # Download a portion of video
 			yt_ft
 			;;
-		3)
+		3) # Download audio only
 			youtube-dl -x --audio-format mp3 -f "bestaudio" -o "$AudioPath/%(title)s.mp3" $yt_url
 			;;
 	esac
 }
 
+# Pick video format
 selectquality(){
+	# List available formats and ignore the first 7 lines
 	quality=$(youtube-dl -F $yt_url | sed -n '7,50p' | dmenu -l 9 -p "Select quality" || exit 1)
+	# Format id
 	qualityid=$(ytprint $quality | awk '{print $1;}')
+
+	# Format extention
 	qualityext=$(ytprint $quality | awk '{print $2;}')
+
+	# IF empty get out
 	[[ $qualityid = "" ]] && exit 1
 }
 
+# PICK HOW TO DOWNLOAD FROM USER
 selectfunc(){
 	chosen=$(ytprint  "1-Download Video\n2-Download part of video\n3-Audio Only" | dmenu $dmenucenter  -p "choose func:" || exit 1)
+
+	# Pick first number only
+	# will be matched with yt_dwn case statement
 	yttype=$(ytprint $chosen | cut -c1-1)
 }
 
+# Get yt url from clipboard
 yt_url=$(xsel -b -o)
+
+# check if valid
 valid=$(expr match "$yt_url" "https*")
 
+# notify if not valid
 if [ $valid -lt 4 ]
 then
 	ytprint $yt_url
 	notify-send "NOT a URL, Please copy url to ur clipboard"
 	exit 1
 fi
-echo $dmenucenter
-echo $SCREEN_WH
+
 selectquality # Select Quality
 selectfunc # Select Download type
 yt_dwn # download

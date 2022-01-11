@@ -2,14 +2,20 @@ super + r ; {k,w}
 	{kill -USR1 $(pidof sxhkd) && notify-send "sxhkd reloaded succefully",
 	xwallpaper --zoom ~/.local/share/wallpaper}
 
-super + w
-	notify-send $PWD
+super + y ; d
+	yt-dl || notify-send "Youtube downloader" "Failed"
+
+super + y ; p
+	ytpl "$(xclip -o -selection clipboard)" || notify-send "Can't play this list" "Failed"
+
+super + y ; {a,v}
+	mpv {--no-video --geometry=100:40,  } --ytdl-format="best[height<1080]" "$(xclip -o -selection clipboard)" || notify-send "MPV Player" "Failed"	
 
 super + t
 	trans
 
 super + d
-	dapps-menu -l 9 -z 600 -c
+	dapps-menu -l 9 -z 600  
 
 super + s ; {s,o,f}
 	import { ~/Downloads/shots/screenshot~$(date '+%F~%T').png, png:- | xclip -selection clipboard -target image/png -i, -window root ~/Downloads/shots/fullshot~$(date '+%F~%T').png && xsetroot -name "Successful Screenshot " }
@@ -31,6 +37,9 @@ super + m
 
 super + u
 	dmmount u
+
+super + v
+	dunstctl history-pop
 
 super + shift + {m,l}
 	$TERMINAL -e {ncmpcpp,lf}
