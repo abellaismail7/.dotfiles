@@ -14,17 +14,17 @@ export KEYTIMEOUT=1
 
 git_prompt(){
 	git  rev-parse --git-dir &> /dev/null || return 1
-	echo -n "%{[1;31m%}  "
+	echo -n "%{[1;31m%}["
 	echo -n "%{[0;31m%}$(git symbolic-ref --short HEAD 2> /dev/null || echo Error )"
-	echo -n "%{[0;35m%}"
 
-	git diff --quiet &> /dev/null || echo "%{[1;33m%} ✗"
+	git diff --quiet &> /dev/null || echo -n "✗"
+	echo -n "]%{[0;35m%}"
 
 
 }
 # enable functions inside PROMPT
 setopt PROMPT_SUBST
-PROMPT="%{[1;94m%}%c\$(git_prompt) %(?:%{[00;32m%}λ:%{[00;31m%}λ) %{[00m%}"
+PROMPT="%{[1;94m%}[%c]\$(git_prompt)%(?:%{[00;32m%}$:%{[00;31m%}$) %{[00m%}"
 # improve tab completion
 autoload -Uz compinit
 compinit
@@ -46,8 +46,16 @@ lfcd () {
     fi
 }
 
+find_config () {
+	own_path="$(find ~/.config -maxdepth 2 -printf "%P\n" | fzf)"
+	if [ -z $_own_path]
+	then
+		nvim ~/.config/$own_path
+	fi
+}
+
 bindkey -s '^o' 'lfcd\n'
-bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
+bindkey -s '^xf' 'find_config\n'
 
 # Key Binding
 autoload -U history-search-end
@@ -66,6 +74,10 @@ alias vim='nvim'
 alias v='nvim'
 
 alias g='git'
+alias gs='git status'
+alias gc='git checkout'
+alias gco='git commit'
+alias gp='git push'
 
 alias -- l='ls -lah'
 alias -- ll='ls -lAh'
@@ -88,7 +100,9 @@ alias -- 9='cd -9'
 alias -- _='sudo '
 alias grep='grep --color=auto'
 
-alias tmux='tmux -f .config/tmux/tmux.conf'
+alias tmux='tmux -f ~/.config/tmux/tmux.conf'
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
 
 # Git
 alias config='/usr/bin/git --git-dir=$HOME/projects/.dotfiles/ --work-tree=$HOME'
@@ -159,3 +173,4 @@ _md(){
 #source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/projects/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /usr/share/fzf/key-bindings.zsh

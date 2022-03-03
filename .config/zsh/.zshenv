@@ -1,6 +1,6 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
-export TERMINAL="st"
+export TERMINAL="alacritty"
 export BROWSER="firefox"
 
 export XDG_CONFIG_HOME="$HOME/.config"

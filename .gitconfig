@@ -7,3 +7,12 @@
 	helper = cache --timeout=3600
 [init]
 	defaultBranch = main
+[alias]
+	p = push
+	cc = commit
+	c = checkout
+	st = status
+	ll = log --oneline
+	rv = remote -v
+	bv = branch -v
+	gl = config --global -l

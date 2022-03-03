@@ -1,10 +1,9 @@
 #!/bin/sh
 
 set previewer ~/.config/lf/preview
-set cleaner preview-image
+set cleaner ~/.config/lf/clear_img
 # Basic Settings
 set preview true
-set drawbox true
 set icons true
 set ignorecase true
 set sortby time
@@ -31,12 +30,12 @@ cmd mkfile ${{
 }}
 
 cmd paste &{{
-    set -- $(lf -remote load)
+    set -- $(cat ~/.local/share/lf/files)
     mode="$1"
     shift
     case "$mode" in
-		copy)
-		    rsync -rltDv --ignore-existing --progress -- "$@" . |
+        copy)
+            rsync -av --ignore-existing --progress -- "$@" . |
             stdbuf -i0 -o0 -e0 tr '\r' '\n' |
             while IFS= read -r line; do
                 lf -remote "send $id echo $line"
@@ -44,9 +43,27 @@ cmd paste &{{
             ;;
         move) mv -n -- "$@" .;;
     esac
-    lf -remote "send load"
+    rm ~/.local/share/lf/files
     lf -remote "send clear"
 }}
+
+#cmd paste &{{
+#    set -- $(lf -remote load)
+#    mode="$1"
+#    shift
+#    case "$mode" in
+#		copy)
+#		    rsync -rltDv --ignore-existing --progress -- "$@" . |
+#            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+#            while IFS= read -r line; do
+#                lf -remote "send $id echo $line"
+#            done
+#            ;;
+#        move) mv -n -- "$@" .;;
+#    esac
+#    lf -remote "send load"
+#    lf -remote "send clear"
+#}}
 
 
 cmd cp2phone ${{
