@@ -9,6 +9,9 @@ LC_CTYPE=en_US.UTF-8
 setopt interactive_comments
 setopt HIST_IGNORE_SPACE
 
+# faster key-bindings
+set -U SXHKD_SHELL sh
+
 # for fast v-mode | side effect no key comb
 export KEYTIMEOUT=1
 
@@ -98,6 +101,9 @@ alias -- 8='cd -8'
 alias -- 9='cd -9'
 
 alias -- _='sudo '
+alias ctl="sudo systemctl"
+alias ctls="sudo systemctl start"
+alias ctld="sudo systemctl disable"
 alias grep='grep --color=auto'
 
 alias tmux='tmux -f ~/.config/tmux/tmux.conf'

@@ -15,8 +15,8 @@ mpd &
 
 # set en,ar keymap
 setxkbmap -layout us,ar 
-xmodmap -e "keycode  94 = grave asciitilde"
-xmodmap -e "keycode  49 = less greater less greater bar brokenbar bar brokenbar"
+# xmodmap -e "keycode  94 = grave asciitilde"
+# xmodmap -e "keycode  49 = less greater less greater bar brokenbar bar brokenbar"
 
 # Keymaps
 sxhkd &
@@ -32,4 +32,3 @@ xwallpaper --zoom ~/.local/share/wallpaper &
 
 # Ask for password => Graphical
 export SUDO_ASKPASS=~/.local/bin/dpass
-
