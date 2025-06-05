@@ -2,33 +2,33 @@
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 #brightness
-xrandr --output eDP1 --brightness 1 --scale 1.0x1.0 
-redshift -O 5000
-redshift -O 5000
-
-xrdb $XDG_CONFIG_HOME/x11/xresources 
-
-mpd &
-
-#### Trackpad
-#modprobe bcm5974 &
-
-# set en,ar keymap
-setxkbmap -layout us,ar 
-# xmodmap -e "keycode  94 = grave asciitilde"
-# xmodmap -e "keycode  49 = less greater less greater bar brokenbar bar brokenbar"
-
-# Keymaps
-sxhkd &
-
-# transparency
-xcompmgr &
-
-# Notification Server
-dunst &
-
-# set Last Background
-xwallpaper --zoom ~/.local/share/wallpaper &
-
-# Ask for password => Graphical
-export SUDO_ASKPASS=~/.local/bin/dpass
+#xrandr --output eDP1 --brightness 1 --scale 1.0x1.0 
+# redshift -O 5000
+# redshift -O 5000
+# 
+# xrdb $XDG_CONFIG_HOME/x11/xresources 
+# 
+# mpd &
+# 
+# #### Trackpad
+# #modprobe bcm5974 &
+# 
+# # set en,ar keymap
+# setxkbmap -layout us,ar 
+# # xmodmap -e "keycode  94 = grave asciitilde"
+# # xmodmap -e "keycode  49 = less greater less greater bar brokenbar bar brokenbar"
+# 
+# # Keymaps
+# sxhkd &
+# 
+# # transparency
+# xcompmgr &
+# 
+# # Notification Server
+# dunst &
+# 
+# # set Last Background
+# xwallpaper --zoom ~/.local/share/wallpaper &
+# 
+# # Ask for password => Graphical
+# export SUDO_ASKPASS=~/.local/bin/dpass

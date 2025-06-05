@@ -35,7 +35,8 @@ super + ctrl + space
 	bspc node -p cancel
 
 super + b
-    bspc config top_padding 0 && polybar-msg cmd toggle
+	$XDG_CONFIG_HOME/sxhkd/togglebar
+	
 
 # expand a window by moving one of its side outward
 ctrl + alt + {h,j,k,l}
@@ -83,7 +84,7 @@ super + d
 	dapps-menu -l 9 -z 600  
 
 super + s ; {s,o,f}
-	import { ~/Downloads/shots/screenshot~$(date '+%F~%T').png, png:- | xclip -selection clipboard -target image/png -i, -window root ~/Downloads/shots/fullshot~$(date '+%F~%T').png && xsetroot -name "Successful Screenshot " }
+	magick import { ~/Downloads/shots/screenshot~$(date '+%F~%T').png, png:- | xclip -selection clipboard -target image/png -i, -window root ~/Downloads/shots/fullshot~$(date '+%F~%T').png && xsetroot -name "Successful Screenshot " }
 
 super + shift + Return
 	$TERMINAL
@@ -106,17 +107,18 @@ super + v
 super + shift + {m,l}
 	$TERMINAL -e {ncmpcpp,lf}
 
+XF86AudioMute
+	pamixer -t; eww update volume="$($XDG_CONFIG_HOME/sxhkd/getVol)"
+
 XF86Audio{Raise,Lower}Volume
-	pamixer --allow-boost {-i,-d} 5; kill -36 $(pidof slblocks)
+	pamixer --allow-boost {-i,-d} 5; eww update volume=$($XDG_CONFIG_HOME/sxhkd/getVol) 
 
 XF86MonBrightness{Up,Down}
-	xbacklight {-inc,-dec} 15
+	light {-A,-U} 15
 
 XF86PowerOff
 	sysact
 
-XF86AudioMute
-	pamixer -t; kill -36 $(pidof slblocks)
 
 XF86Audio{Prev,Next,Play}
-	mpc {prev,next,toggle}
+	notify-send "test"

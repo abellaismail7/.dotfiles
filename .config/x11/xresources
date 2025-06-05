@@ -8,5 +8,5 @@ xterm*foreground: lightgray
 xterm*faceSize: 14
 xterm*faceName: JetBrainsMono Nerd Font
 
-#include "Xresources.d/7.colors"
+#include "Xresources.d/6.colors"
 #include "Xresources.d/rofi"

@@ -1,0 +1,103 @@
+(defvar volume "-10")
+(defwidget bar []
+  (centerbox :orientation "h"
+    (workspaces)
+		(middle)
+    (sidestuff)))
+
+(defwidget middle[]
+  (box 
+		:class "sidestuff" 
+		:orientation "h" 
+		:space-evenly false 
+		:halign "center"
+		  time
+    ))
+
+(defwidget sidestuff []
+  (box 
+		:class "sidestuff" 
+		:orientation "h" 
+		:space-evenly false 
+		:spacing 10
+		:halign "end"
+		  (_network :name netname :strength net :offline "󰤭" :excellent "󰤪" :good "󰤧"
+                :okay "󰤤" :slow "󰤡")
+      (metric :label "VOL:"
+              :value {volume < 0 ? -volume : volume}
+							:status {volume < 0 ? "disabled" : ""}
+              :onchange "")
+      (metric :label "RAM:"
+              :value {EWW_RAM.used_mem_perc}
+              :onchange "")
+      (metric :label "DISK:"
+              :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+              :onchange "")
+      (metric :label "BAT:"
+						:status {EWW_BATTERY.BAT0.status == "Charging" ? "success" :  "normal"}
+            :value {EWW_BATTERY.BAT0.capacity}
+            :onchange "")
+    ))
+
+
+(deflisten workspace "scripts/getWorkspaces")
+
+(defwidget workspaces []
+  (literal :content workspace))
+
+(defwidget music []
+  (box :class "music"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+    {music != "" ? "🎵${music}" : ""}))
+
+(defwidget _network [strength name offline excellent good okay slow]
+  (box :class "net-box"
+       :space-evenly false
+       :spacing 8
+    (label :text "${strength == "" ? offline : strength < 26 ? slow : strength < 51 ? okay : strength < 76 ? good : excellent} ")
+		(label :text "${name} ")
+	))
+		
+
+
+(defwidget metric [label value onchange ?status]
+  (box :orientation "h"
+       :class "${status} metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+
+
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %b %d, %Y'")
+
+(defpoll net :interval "100s"
+  :initial `N/A`
+  `nmcli -t -f SIGNAL,ACTIVE device wifi \
+    | awk -F':' '{if($2=="yes")print$1}'`)
+
+(defpoll netname :interval "10s"
+  :initial `N/A` `iwgetid -r`)
+
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+	:wm-ignore false
+	:stacking "fg"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "10px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "4%")
+  (bar))

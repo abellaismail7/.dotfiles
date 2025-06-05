@@ -1,0 +1,37 @@
+#!/bin/sh
+workspaces() {
+
+classes=("" "" "" "" "" "" "" "" "")
+
+for element in $(bspc query -D -d .occupied --names)
+do
+	classes[$((element-1))]="occupied";
+done
+
+for element in $(bspc query -D -d focused --names)
+do
+	classes[$((element-1))]="focused";
+done
+
+for element in $(bspc query -D -d .urgent --names)
+do
+	classes[$((element-1))]="urgent";
+done
+
+ic_1=""
+ic_2="󰈹"
+ic_3=""
+ic_4="󰎭"
+ic_5="󰎱"
+ic_6="󰎳"
+ic_7="󰎶"
+ic_8="󰎹"
+ic_9="󰎼"
+
+echo 	"(box :class \"workspaces\" :spacing \"10\" :orientation \"h\" :halign \"start\" :space-evenly \"true\" (button :class \"${classes[0]}\" \"$ic_1\") (button :class \"${classes[1]}\" \"$ic_2\") (button :class \"${classes[2]}\" \"$ic_3\") (button :class \"${classes[3]}\" \"$ic_4\") (button :class \"${classes[4]}\" \"$ic_5\")  (button :class \"${classes[5]}\" \"$ic_6\") (button :class \"${classes[6]}\" \"$ic_7\") (button :class \"${classes[7]}\" \"$ic_8\") (button :class \"${classes[8]}\" \"$ic_9\"))"
+
+}
+workspaces
+bspc subscribe all | while read -r _ ; do
+workspaces
+done

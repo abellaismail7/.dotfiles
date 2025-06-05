@@ -1,0 +1,9 @@
+#!/bin/sh
+
+vol=$(pamixer --get-volume)
+
+if [ true == $(pamixer --get-mute) ]; then
+    echo -n -
+fi
+
+echo $vol

@@ -1,0 +1,85 @@
+* {
+  all: unset; //Unsets everything so you can style everything from scratch
+}
+
+//Global Styles
+.bar {
+  background-color: rgba(31, 34, 42, .8);
+  color: #b0b4bc;
+  padding: 5px;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 17px;
+}
+
+// Styles on classes (see eww.yuck for more information)
+
+.sidestuff slider {
+  all: unset;
+  color: #ffd5cd;
+}
+
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 8px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  background-color: #61AFEF;
+  color: #000000;
+  border-radius: 10px;
+}
+
+.metric.success scale trough highlight {
+  background-color: #31af85;
+}
+
+.metric.danger scale trough highlight {
+  background-color: #cc6767;
+}
+
+.metric.disabled scale trough highlight {
+  background-color: #ABB2BF;
+}
+
+.label-ram {
+  font-size: large;
+}
+
+.net-box {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding-left: 5px;
+  padding-right: 2px;
+}
+
+.workspaces {
+  button {
+    color: rgba(211, 211, 211, .4);
+  }
+
+  button:hover {
+    color: rgba(211, 211, 211, .4);
+  }
+
+  button:nth-child(n+4) {
+    padding-left: 10px;
+  }
+
+  .occupied {
+    color: rgba(211, 211, 211, 1);
+  }
+
+  .focused {
+    color: #98C379;
+  }
+
+  .urgent {
+    color: red;
+  }
+}

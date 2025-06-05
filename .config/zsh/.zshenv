@@ -1,11 +1,11 @@
-export EDITOR="nvim"
-export VISUAL="nvim"
-export TERMINAL="alacritty"
-export BROWSER="firefox"
+# export EDITOR="nvim"
+# export VISUAL="nvim"
+# export TERMINAL="alacritty"
+# export BROWSER="firefox"
 
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
+# export XDG_CONFIG_HOME="$HOME/.config"
+# export XDG_DATA_HOME="$HOME/.local/share"
+# export XDG_CACHE_HOME="$HOME/.cache"
 
 #export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
 #

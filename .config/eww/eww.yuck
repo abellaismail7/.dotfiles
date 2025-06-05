@@ -1,0 +1,4 @@
+(include "${get_env("XDG_CONFIG_HOME")}/eww/solo.yuck")
+(include "${get_env("XDG_CONFIG_HOME")}/eww/dell.yuck")
+(include "${get_env("XDG_CONFIG_HOME")}/eww/notification/eww.yuck")
+

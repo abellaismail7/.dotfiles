@@ -1,0 +1,9 @@
+#!/bin/sh
+eww open --toggle bar
+
+if eww active-windows | grep "bar: bar" 
+then
+  bspc config top_padding 35
+else
+	bspc config top_padding 0
+fi
